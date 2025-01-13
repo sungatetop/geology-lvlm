@@ -61,7 +61,7 @@ def query_llm(conversations:dict,save_path="./prediction.jsonl"):
 def main():
     import glob
     from tqdm import tqdm
-    evalfiles=glob.glob("data/eval_*.json",recursive=True)
+    evalfiles=glob.glob("eval_origin/eval_*.json",recursive=True)
     print(evalfiles)
 
     for file in tqdm(evalfiles):
