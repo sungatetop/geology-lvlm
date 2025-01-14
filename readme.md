@@ -27,7 +27,7 @@ The knowledge base is derived from the **Tunnel Design-Construction Code**, ensu
       title={VLLM Evaluation Dataset for Tunnel Geology}, 
       author={Baolin Chen and Jiawei Xie},
       howpublished={\url{https://github.com/sungatetop/geology-vllm.git}},
-      year={2024},
+      year={2025},
 }
 ```
 

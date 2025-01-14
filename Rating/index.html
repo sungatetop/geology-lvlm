@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>对话数据评分</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .dialogue {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .dialogue img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .rating {
+            margin-top: 10px;
+        }
+        .rating label {
+            margin-right: 10px;
+        }
+        .submit-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        .prediction, .label {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .switch-buttons {
+            margin-bottom: 20px;
+        }
+        .switch-buttons button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .switch-buttons button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>对话数据评分</h1>
+
+<div class="switch-buttons">
+    <input type="file" id="fileInput" accept=".jsonl">
+    <button onclick="loadData()">加载数据</button>
+    <button onclick="prevDialogue()">上一个</button>
+    <button onclick="nextDialogue()">下一个</button>
+</div>
+
+<div id="dialogues">
+    <!-- 对话数据将动态插入到这里 -->
+</div>
+
+<button class="submit-btn" onclick="submitRatings()">提交评分并下载</button>
+
+<script src="script.js"></script>
+
+</body>
+</html>
