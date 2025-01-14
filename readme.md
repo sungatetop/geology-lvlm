@@ -21,8 +21,10 @@
 ### 3. Tunnel Knowledge
 The knowledge base is derived from the **Tunnel Design-Construction Code**, ensuring that all information is aligned with industry standards and best practices. 
 
-### 4.Notice
-Some of the data is generated using ChatGPT and may contain errors. Please do not use it directly in actual production.
+### 4.Comments
+* Some of the data is generated using ChatGPT and may contain errors. Please do not use it directly in actual production.
+* This dataset is designed to provide support for the evaluation and research of VLLM in the field of tunnel geology.
+
 ## Citation
 ```bibtex
 @misc{sungatetop,
@@ -33,4 +35,3 @@ Some of the data is generated using ChatGPT and may contain errors. Please do no
 }
 ```
 
-This dataset is designed to facilitate advanced evaluation and research in the field of tunnel geology, providing a robust foundation for both single-feature analysis and complex reasoning tasks. By leveraging this comprehensive resource, researchers and practitioners can enhance their understanding and improve the outcomes of tunnel construction projects.
