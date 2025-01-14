@@ -21,6 +21,8 @@
 ### 3. Tunnel Knowledge
 The knowledge base is derived from the **Tunnel Design-Construction Code**, ensuring that all information is aligned with industry standards and best practices. 
 
+### 4.Notice
+Some of the data is generated using ChatGPT and may contain errors. Please do not use it directly in actual production.
 ## Citation
 ```bibtex
 @misc{sungatetop,
