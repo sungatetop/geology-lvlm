@@ -2,7 +2,7 @@
 
 * [中文](./readme-ZH.md)
 
-<image src="./images/Geo-vLLM.png" width="200" height="200" />
+<image src="./images/Geo-LVLM.png" width="200" height="200" />
 
 ## Evaluation Dataset
 * **Common Scene**: Sourced from the [CogVLM-SFT-311K](https://github.com/THUDM/CogVLM/blob/main/dataset.md) dataset.
