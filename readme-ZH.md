@@ -2,7 +2,7 @@
 
 * [英文](./readme.md)
 
-<image src="./images/Geo-vLLM.png" width="200" height="200" />
+<image src="./images/Geo-LVLM.png" width="200" height="200" />
 
 ## 评估数据集
 * **常见场景**：来源于[CogVLM-SFT-311K](https://github.com/THUDM/CogVLM/blob/main/dataset.md)数据集，提供了与隧道施工相关的多样化视觉场景。
