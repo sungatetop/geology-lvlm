@@ -1,4 +1,4 @@
-# VLLM Evaluation Dataset for Tunnel Geology
+# LVLM Evaluation Dataset for Tunnel Geology
 
 * [中文](./readme-ZH.md)
 
@@ -28,9 +28,9 @@ The knowledge base is derived from the **Tunnel Design-Construction Code**, ensu
 ## Citation
 ```bibtex
 @misc{sungatetop,
-      title={VLLM Evaluation Dataset for Tunnel Geology}, 
+      title={LVLM Evaluation Dataset for Tunnel Geology}, 
       author={Baolin Chen and Jiawei Xie},
-      howpublished={\url{https://github.com/sungatetop/geology-vllm.git}},
+      howpublished={\url{https://github.com/sungatetop/geology-lvlm.git}},
       year={2025},
 }
 ```
