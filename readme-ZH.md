@@ -1,4 +1,4 @@
-# 隧道地质VLLM评估数据集
+# 隧道地质LVLM评估数据集
 
 * [英文](./readme.md)
 
@@ -27,7 +27,7 @@
 ## 引用
 ```bibtex
 @misc{sungatetop,
-      title={VLLM Evaluation Dataset for Tunnel Geology}, 
+      title={LVLM Evaluation Dataset for Tunnel Geology}, 
       author={Baolin Chen and Jiawei Xie},
       howpublished={\url{https://github.com/sungatetop/geology-vllm.git}},
       year={2024},
