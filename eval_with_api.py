@@ -11,7 +11,7 @@ def readImageBase64(image_path):
         return base64.b64encode(image_data).decode()
 
 require_version("openai>=1.5.0", "To fix: pip install openai>=1.5.0")
-image_root="./data/"
+image_root="./eval_origin/"
 
 def query_llm(conversations:dict,save_path="./prediction.jsonl"):
     client = OpenAI(
@@ -40,6 +40,8 @@ def query_llm(conversations:dict,save_path="./prediction.jsonl"):
                 message["content"].append({"type":"image_url","image_url":{
                         "url":"data:image/png;base64,"+image
                 }})
+        else:
+            images=[]
         #user
         messages.append(message)
         assitant_item=convs[idx*2+1]
@@ -61,6 +63,7 @@ def query_llm(conversations:dict,save_path="./prediction.jsonl"):
 def main():
     import glob
     from tqdm import tqdm
+    save_root='./qwen2-vl-5ep/'
     evalfiles=glob.glob("eval_origin/eval_*.json",recursive=True)
     print(evalfiles)
 
@@ -71,7 +74,7 @@ def main():
         if os.path.exists(filename+'l'):
             continue
         for d in tqdm(data):
-            query_llm(d,filename+"l")
+            query_llm(d,save_root+filename+"l")
 
 
 if __name__ == "__main__":
