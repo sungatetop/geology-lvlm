@@ -1,3 +1,7 @@
+'''
+ 参考llava-med
+
+'''
 import os
 import json
 import asyncio
