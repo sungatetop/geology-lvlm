@@ -14,6 +14,7 @@ import openai
 import util
 
 '''
+#参考llava-med
 假设GPT的结果和llava的结果格式一样，llava的格式参考的qwenl，分为几个主题的json，每个json内按照固定格式
 python model_comparison.py \
     --llava-dir path/to/llava/answers \
