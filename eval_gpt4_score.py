@@ -55,47 +55,44 @@ def process_file(input_file, output_file, model_inst):
         samples = [json.loads(line) for line in f]
     
     results = []
-    batch = []
-    batch_samples = []
-    BATCH_SIZE = 1
+    BATCH_SIZE = 10
 
     for sample in tqdm(samples):
-        # Extract the first conversation
-        conv = sample['conversations'][0]
-        image_path = conv['images'][0] if conv.get('images') else "No image"
-        question = conv['user_input']
-        prediction = conv['prediction']
-        label = conv.get('label', '')  # Get label if exists
-        
-        input_msg = compare_messages_gen(image_path, question, label, prediction)
-        batch.append(input_msg)
-        batch_samples.append(deepcopy(sample))
-
-        if len(batch) >= BATCH_SIZE:
-            inference_results = [x.strip() for chunk_messages in chunk([x for x in batch if x], BATCH_SIZE) 
+        # 处理每个样本中的所有对话轮次
+        for i, conv in enumerate(sample['conversations']):
+            # 创建当前轮次的结果对象
+            turn_result = {
+                'id': f"{sample['id']}_turn_{i+1}",  # 添加轮次编号
+                'original_id': sample['id'],
+                'turn_number': i + 1,
+                'total_turns': len(sample['conversations']),
+                'conversation': conv  # 保存当前轮次的对话内容
+            }
+            
+            image_path = conv['images'][0] if conv.get('images') else "No image"
+            question = conv['user_input']
+            prediction = conv['prediction']
+            label = conv.get('label', '')
+            
+            input_msg = compare_messages_gen(image_path, question, label, prediction)
+            
+            # 对当前轮次进行评估
+            inference_results = [x.strip() for chunk_messages in chunk([input_msg], BATCH_SIZE) 
                                for x in model_inst.infer(chunk_messages)]
             
-            for item, inference_result in zip(batch_samples, inference_results):
-                item['gpt_eval'] = inference_result
-            results.extend(batch_samples)
-            batch = []
-            batch_samples = []
+            # 保存评估结果
+            turn_result['evaluation'] = inference_results[0] if inference_results else ''
+            results.append(turn_result)
+            
+        print(f"Processed {len(sample['conversations'])} conversations for sample {sample['id']}")
 
-    # Process remaining samples
-    if batch:
-        inference_results = [x.strip() for chunk_messages in chunk([x for x in batch if x], BATCH_SIZE) 
-                           for x in model_inst.infer(chunk_messages)]
-        for item, inference_result in zip(batch_samples, inference_results):
-            item['gpt_eval'] = inference_result
-        results.extend(batch_samples)
+    print(f"Processed {len(results)} total turns")
 
-    print(f"Processed {len(results)} samples")
-
-    # Save results
+    # Save results - each turn as a separate line
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     with open(output_file, 'w', encoding='utf-8') as f:
-        for item in results:
-            f.write(json.dumps(item, ensure_ascii=False) + '\n')
+        for turn_result in results:
+            f.write(json.dumps(turn_result, ensure_ascii=False) + '\n')
 
 def main(args):
     # Initialize GPT-4 model
@@ -106,12 +103,12 @@ def main(args):
     
     # Process each evaluation file
     eval_files = [
-        # 'eval_cog_merge_data_v1.jsonl',
-        # 'eval_complex_reasoning.jsonl',
-        # 'eval_intro_conv_v1.jsonl',
+        'eval_cog_merge_data_v1.jsonl',
+        'eval_complex_reasoning.jsonl',
+        'eval_intro_conv_v1.jsonl',
         'eval_single_feature_judge.jsonl',
-        # 'eval_support_params_v1.jsonl',
-        # 'eval_tunnel_knowledge.jsonl'
+        'eval_support_params_v1.jsonl',
+        'eval_tunnel_knowledge.jsonl'
     ]
     
     for eval_file in eval_files:
@@ -132,4 +129,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
     main(args)
 
+# python eval_gpt4_score.py --input-dir eval_result/llava-1.5-13b-hf-sft-5ep --output-dir eval_result/llava-1.5-13b-hf-sft-5ep/gpt4_scores
 #python eval_gpt4_score.py --input-dir eval_result/llava-1.5-7b-hf-sft-5ep --output-dir eval_result/llava-1.5-7b-hf-sft-5ep/gpt4_scores
