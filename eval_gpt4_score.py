@@ -6,17 +6,25 @@ from pathlib import Path
 from tqdm import tqdm
 import llm
 import util
-
 INSTRUCT_PROMPT = """我们想请您对上述用户问题的AI助手回答进行评估。用户在观察图片时提出了问题。为了您的参考，图片的内容通过图片说明来表示。
+# 请评估回答的以下几个方面：
+# 1. 专业性（professionality）：回答是否较好的使用专业词汇，是否引用规范等专业材料
+# 2. 准确性（Accuracy）：回答的内容是否准确，与参考答案相比是否正确
 
-请评估回答的以下几个方面：
-1. 帮助性（Helpfulness）：回答是否有效解决了用户的问题
-2. 相关性（Relevance）：回答是否紧扣问题主题
-3. 准确性（Accuracy）：回答的内容是否准确，与参考答案相比是否正确
-4. 详细程度（Level of Detail）：回答是否提供了足够的细节信息
 
-请首先输出一行，仅包含一个1到10的分数，其中更高的分数表示更好的整体表现。
+请首先输出一行，仅包含一个0到10的分数，其中更高的分数表示更好的整体性表现。
 在随后的几行中，请提供您评估的详细解释，说明为什么给出这个分数。"""
+
+# INSTRUCT_PROMPT = """我们想请您对上述用户问题的AI助手回答进行评估。用户在观察图片时提出了问题。为了您的参考，图片的内容通过图片说明来表示。
+
+# 请评估回答的以下几个方面：
+# 1. 帮助性（Helpfulness）：回答是否有效解决了用户的问题
+# 2. 相关性（Relevance）：回答是否紧扣问题主题
+# 3. 准确性（Accuracy）：回答的内容是否准确，与参考答案相比是否正确
+
+
+# 请首先输出一行，仅包含3个1到10的分数，其中更高的分数表示更好的整体表现。
+# 在随后的几行中，请提供您评估的详细解释，说明为什么给出这些分数。"""
 
 ROLE = 'Assistant'
 
@@ -103,11 +111,11 @@ def main(args):
     
     # Process each evaluation file
     eval_files = [
-        'eval_cog_merge_data_v1.jsonl',
-        'eval_complex_reasoning.jsonl',
-        'eval_intro_conv_v1.jsonl',
-        'eval_single_feature_judge.jsonl',
-        'eval_support_params_v1.jsonl',
+        # 'eval_cog_merge_data_v1.jsonl',
+        # 'eval_complex_reasoning.jsonl',
+        # 'eval_intro_conv_v1.jsonl',
+        # 'eval_single_feature_judge.jsonl',
+        # 'eval_support_params_v1.jsonl',
         'eval_tunnel_knowledge.jsonl'
     ]
     
@@ -131,3 +139,4 @@ if __name__ == '__main__':
 
 # python eval_gpt4_score.py --input-dir eval_result/llava-1.5-13b-hf-sft-5ep --output-dir eval_result/llava-1.5-13b-hf-sft-5ep/gpt4_scores
 #python eval_gpt4_score.py --input-dir eval_result/llava-1.5-7b-hf-sft-5ep --output-dir eval_result/llava-1.5-7b-hf-sft-5ep/gpt4_scores
+# python eval_gpt4_score.py --input-dir eval_result/GPT4Vresults --output-dir eval_result/GPT4Vresults/gpt4_scores
