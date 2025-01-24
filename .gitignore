@@ -3,3 +3,5 @@ llm.py
 llm.py
 llm.py
 gpt4v_inference.py
+gpt_eval/
+score.py
