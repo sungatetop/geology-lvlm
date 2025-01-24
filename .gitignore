@@ -1,4 +1,2 @@
 *.pyc
-llm.py
-llm.py
-llm.py
+gpt_eval/
