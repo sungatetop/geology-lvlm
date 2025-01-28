@@ -135,31 +135,31 @@ async def main(args):
                 f.write(json.dumps(result, ensure_ascii=False) + '\n')
                 
         # 统计不同主题的得分
-        score_theme_dict = defaultdict(lambda: defaultdict(list))
-        for x in results:
-            theme = x['theme']
-            score = x['gpt_eval'].split('\n')[0]
-            llava_score = float(score)
-            score_theme_dict[theme][1].append(llava_score)  # LLaVA scores
-            score_theme_dict['overall'][2].append(llava_score)
+        # score_theme_dict = defaultdict(lambda: defaultdict(list))
+        # for x in results:
+        #     theme = x['theme']
+        #     score = x['gpt_eval'].split('\n')[0]
+        #     llava_score = float(score)
+        #     score_theme_dict[theme][1].append(llava_score)  # LLaVA scores
+        #     score_theme_dict['overall'][2].append(llava_score)
         
-        # 计算各项统计指标
-        result = defaultdict(dict)
-        for theme, score_dict in score_theme_dict.items():
-            result[theme]['llava_score'] = util.get_avg(score_dict[1])
-            #result[theme]['gpt_score'] = util.get_avg(score_dict[2])
-            #result[theme]['relative_score'] = util.get_avg([float(s2)/float(s1) for s1, s2 in zip(score_dict[1], score_dict[2])])*100
-            result[theme]['data_size'] = len(score_dict[1])
+        # # 计算各项统计指标
+        # result = defaultdict(dict)
+        # for theme, score_dict in score_theme_dict.items():
+        #     result[theme]['llava_score'] = util.get_avg(score_dict[1])
+        #     #result[theme]['gpt_score'] = util.get_avg(score_dict[2])
+        #     #result[theme]['relative_score'] = util.get_avg([float(s2)/float(s1) for s1, s2 in zip(score_dict[1], score_dict[2])])*100
+        #     result[theme]['data_size'] = len(score_dict[1])
             
-        # 输出结果
-        df = pd.DataFrame.from_dict(result).T
-        print("\nModel Performance Comparison by Theme:")
-        print(df)
+        # # 输出结果
+        # df = pd.DataFrame.from_dict(result).T
+        # print("\nModel Performance Comparison by Theme:")
+        # print(df)
         
-        # 输出每个主题的样本数量
-        print("\nSample counts by theme:")
-        for theme in result:
-            print(f"{theme}: {result[theme]['data_size']}")
+        # # 输出每个主题的样本数量
+        # print("\nSample counts by theme:")
+        # for theme in result:
+        #     print(f"{theme}: {result[theme]['data_size']}")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser("LLaVA vs GPT Model Comparison", add_help=True)
