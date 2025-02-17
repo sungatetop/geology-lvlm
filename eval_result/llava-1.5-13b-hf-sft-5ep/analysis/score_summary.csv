@@ -1,0 +1,6 @@
+Task,count,mean,std,min,max
+eval_cog_merge_data_v1,21,7.38,1.91,3.0,10.0
+eval_complex_reasoning,271,7.82,1.35,0.0,10.0
+eval_single_feature_judge,197,6.79,0.93,3.0,8.0
+eval_support_params_v1,12,7.92,1.68,5.0,10.0
+eval_tunnel_knowledge,180,7.19,1.42,3.0,9.0

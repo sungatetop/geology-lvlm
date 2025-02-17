@@ -158,10 +158,41 @@ def analyze_scores(scores_dir, output_dir):
 def main():
     # scores_dir = "eval_result/llava-1.5-7b-hf-sft-5ep/gpt4_scores"
     # output_dir = "eval_result/llava-1.5-7b-hf-sft-5ep/analysis"
-    scores_dir = "eval_result/llava-1.5-13b-hf-sft-5ep/gpt4_scores"
-    output_dir = "eval_result/llava-1.5-13b-hf-sft-5ep/analysis"
+    # scores_dir = "eval_result/llava-1.5-7b-hf/gpt4_scores"
+    # output_dir = "eval_result/llava-1.5-7b-hf/analysis"
+    # scores_dir = "eval_result/llava-1.5-13b-hf-sft-5ep/gpt4_scores"
+    # output_dir = "eval_result/llava-1.5-13b-hf-sft-5ep/analysis"
+    # scores_dir = "eval_result/llava-1.5-13b-hf/gpt4_scores"
+    # output_dir = "eval_result/llava-1.5-13b-hf/analysis"
     # scores_dir = "eval_result/GPT4Vresults/gpt4_scores"
     # output_dir = "eval_result/GPT4Vresults/analysis"
+    # scores_dir = "eval_result/qwen2_vl_full_sft_2ep/gpt4_scores"
+    # output_dir = "eval_result/qwen2_vl_full_sft_2ep/analysis"
+    # scores_dir = "eval_result/qwen2_vl_lora_sft_15ep/gpt4_scores"
+    # output_dir = "eval_result/qwen2_vl_lora_sft_15ep/analysis"
+    # scores_dir = "eval_result/qwen2-vl-5ep/gpt4_scores"
+    # output_dir = "eval_result/qwen2-vl-5ep/analysis"
+
+
+
+    # scores_dir = "eval_result/llava-1.5-7b-hf-sft-5ep/gpt4_scores_gpt4"
+    # output_dir = "eval_result/llava-1.5-7b-hf-sft-5ep/analysis_gpt4"
+    # scores_dir = "eval_result/llava-1.5-7b-hf/gpt4_scores_gpt4"
+    # output_dir = "eval_result/llava-1.5-7b-hf/analysis_gpt4"
+    # scores_dir = "eval_result/llava-1.5-13b-hf-sft-5ep/gpt4_scores_gpt4"
+    # output_dir = "eval_result/llava-1.5-13b-hf-sft-5ep/analysis_gpt4"
+    # scores_dir = "eval_result/llava-1.5-13b-hf/gpt4_scores_gpt4"
+    # output_dir = "eval_result/llava-1.5-13b-hf/analysis_gpt4"
+    # scores_dir = "eval_result/GPT4Vresults/gpt4_scores_gpt4"
+    # output_dir = "eval_result/GPT4Vresults/analysis_gpt4"
+    # scores_dir = "eval_result/qwen2_vl_full_sft_2ep/gpt4_scores_gpt4"
+    # output_dir = "eval_result/qwen2_vl_full_sft_2ep/analysis_gpt4"
+    # scores_dir = "eval_result/qwen2_vl_lora_sft_15ep/gpt4_scores_gpt4"
+    # output_dir = "eval_result/qwen2_vl_lora_sft_15ep/analysis_gpt4"
+    # scores_dir = "eval_result/qwen2-vl-5ep/gpt4_scores_gpt4"
+    # output_dir = "eval_result/qwen2-vl-5ep/analysis_gpt4"
+    scores_dir = "eval_result/deepseek_r1_distill_qwen2_vl_7b/gpt4_scores_gpt4"
+    output_dir = "eval_result/deepseek_r1_distill_qwen2_vl_7b/analysis_gpt4"
     analyze_scores(scores_dir, output_dir)
 
 if __name__ == "__main__":

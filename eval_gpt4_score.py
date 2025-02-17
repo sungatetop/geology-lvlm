@@ -6,14 +6,16 @@ from pathlib import Path
 from tqdm import tqdm
 import llm
 import util
-INSTRUCT_PROMPT = """我们想请您对上述用户问题的AI助手回答进行评估。用户在观察图片时提出了问题。为了您的参考，图片的内容通过图片说明来表示。
-# 请评估回答的以下几个方面：
-# 1. 专业性（professionality）：回答是否较好的使用专业词汇，是否引用规范等专业材料
-# 2. 准确性（Accuracy）：回答的内容是否准确，与参考答案相比是否正确
+INSTRUCT_PROMPT = """你是一位理性的评价者,需要对用户的答题进行打分。请根据正确答案对用户的答题结果进行评分，评分范围是0-10分,分数越高表示用户的回答越准确，请首先输出一行,仅包含一个0到10的分数,表示答题的得分。接下来清提供详细的评估说明，避免任何潜在偏见，并确保回答的呈现顺序不会影响您的判断。"""
+
+# INSTRUCT_PROMPT = """我们想请您对上述用户问题的AI助手回答进行评估。用户在观察图片时提出了问题。为了您的参考，图片的内容通过图片说明来表示。
+# # 请评估回答的以下几个方面：
+# # 1. 专业性（professionality）：回答是否较好的使用专业词汇，是否引用规范等专业材料
+# # 2. 准确性（Accuracy）：回答的内容是否准确，与参考答案相比是否正确
 
 
-请首先输出一行，仅包含一个0到10的分数，其中更高的分数表示更好的整体性表现。
-在随后的几行中，请提供您评估的详细解释，说明为什么给出这个分数。"""
+# 请首先输出一行，仅包含一个0到10的分数，其中更高的分数表示更好的整体性表现。
+# 在随后的几行中，请提供您评估的详细解释，说明为什么给出这个分数。"""
 
 # INSTRUCT_PROMPT = """我们想请您对上述用户问题的AI助手回答进行评估。用户在观察图片时提出了问题。为了您的参考，图片的内容通过图片说明来表示。
 
@@ -63,18 +65,20 @@ def process_file(input_file, output_file, model_inst):
         samples = [json.loads(line) for line in f]
     
     results = []
-    BATCH_SIZE = 10
-
-    for sample in tqdm(samples):
-        # 处理每个样本中的所有对话轮次
+    BATCH_SIZE = 100
+    
+    # Prepare batches of messages
+    current_batch = []
+    current_batch_results = []
+    
+    for sample in samples:
         for i, conv in enumerate(sample['conversations']):
-            # 创建当前轮次的结果对象
             turn_result = {
-                'id': f"{sample['id']}_turn_{i+1}",  # 添加轮次编号
+                'id': f"{sample['id']}_turn_{i+1}",
                 'original_id': sample['id'],
                 'turn_number': i + 1,
                 'total_turns': len(sample['conversations']),
-                'conversation': conv  # 保存当前轮次的对话内容
+                'conversation': conv
             }
             
             image_path = conv['images'][0] if conv.get('images') else "No image"
@@ -83,16 +87,29 @@ def process_file(input_file, output_file, model_inst):
             label = conv.get('label', '')
             
             input_msg = compare_messages_gen(image_path, question, label, prediction)
+            current_batch.append(input_msg)
+            current_batch_results.append(turn_result)
             
-            # 对当前轮次进行评估
-            inference_results = [x.strip() for chunk_messages in chunk([input_msg], BATCH_SIZE) 
-                               for x in model_inst.infer(chunk_messages)]
-            
-            # 保存评估结果
-            turn_result['evaluation'] = inference_results[0] if inference_results else ''
-            results.append(turn_result)
-            
-        print(f"Processed {len(sample['conversations'])} conversations for sample {sample['id']}")
+            # Process batch when it reaches BATCH_SIZE
+            if len(current_batch) >= BATCH_SIZE:
+                inference_results = model_inst.infer(current_batch)
+                
+                # Update results with evaluations
+                for result, evaluation in zip(current_batch_results, inference_results):
+                    result['evaluation'] = evaluation.strip()
+                    results.append(result)
+                
+                print(f"Processed batch of {len(current_batch)} messages")
+                current_batch = []
+                current_batch_results = []
+    
+    # Process remaining messages if any
+    if current_batch:
+        inference_results = model_inst.infer(current_batch)
+        for result, evaluation in zip(current_batch_results, inference_results):
+            result['evaluation'] = evaluation.strip()
+            results.append(result)
+        print(f"Processed final batch of {len(current_batch)} messages")
 
     print(f"Processed {len(results)} total turns")
 
@@ -105,17 +122,18 @@ def process_file(input_file, output_file, model_inst):
 def main(args):
     # Initialize GPT-4 model
     model_inst = llm.GPT("gpt-4o-mini")  # 使用gpt-4o-mini模型
-    
+    # model_inst = llm.GPT("gpt-4o")  # 使用gpt-4o-mini模型
+
     # Create output directory if it doesn't exist
     os.makedirs(args.output_dir, exist_ok=True)
     
     # Process each evaluation file
     eval_files = [
-        # 'eval_cog_merge_data_v1.jsonl',
-        # 'eval_complex_reasoning.jsonl',
+        'eval_cog_merge_data_v1.jsonl',
+        'eval_complex_reasoning.jsonl',
         # 'eval_intro_conv_v1.jsonl',
-        # 'eval_single_feature_judge.jsonl',
-        # 'eval_support_params_v1.jsonl',
+        'eval_single_feature_judge.jsonl',
+        'eval_support_params_v1.jsonl',
         'eval_tunnel_knowledge.jsonl'
     ]
     
@@ -140,3 +158,20 @@ if __name__ == '__main__':
 # python eval_gpt4_score.py --input-dir eval_result/llava-1.5-13b-hf-sft-5ep --output-dir eval_result/llava-1.5-13b-hf-sft-5ep/gpt4_scores
 #python eval_gpt4_score.py --input-dir eval_result/llava-1.5-7b-hf-sft-5ep --output-dir eval_result/llava-1.5-7b-hf-sft-5ep/gpt4_scores
 # python eval_gpt4_score.py --input-dir eval_result/GPT4Vresults --output-dir eval_result/GPT4Vresults/gpt4_scores
+#python eval_gpt4_score.py --input-dir eval_result/llava-1.5-7b-hf --output-dir eval_result/llava-1.5-7b-hf/gpt4_scores
+# python eval_gpt4_score.py --input-dir eval_result/llava-1.5-13b-hf --output-dir eval_result/llava-1.5-13b-hf/gpt4_scores
+# python eval_gpt4_score.py --input-dir eval_result/qwen2_vl_full_sft_2ep --output-dir eval_result/qwen2_vl_full_sft_2ep/gpt4_scores
+# python eval_gpt4_score.py --input-dir eval_result/qwen2_vl_lora_sft_15ep --output-dir eval_result/qwen2_vl_lora_sft_15ep/gpt4_scores
+# python eval_gpt4_score.py --input-dir eval_result/qwen2-vl-5ep --output-dir eval_result/qwen2-vl-5ep/gpt4_scores
+
+
+# python eval_gpt4_score.py --input-dir eval_result/llava-1.5-13b-hf-sft-5ep --output-dir eval_result/llava-1.5-13b-hf-sft-5ep/gpt4_scores_gpt4
+# python eval_gpt4_score.py --input-dir eval_result/llava-1.5-7b-hf-sft-5ep --output-dir eval_result/llava-1.5-7b-hf-sft-5ep/gpt4_scores_gpt4
+# python eval_gpt4_score.py --input-dir eval_result/GPT4Vresults --output-dir eval_result/GPT4Vresults/gpt4_scores_gpt4
+# python eval_gpt4_score.py --input-dir eval_result/llava-1.5-7b-hf --output-dir eval_result/llava-1.5-7b-hf/gpt4_scores_gpt4
+# python eval_gpt4_score.py --input-dir eval_result/llava-1.5-13b-hf --output-dir eval_result/llava-1.5-13b-hf/gpt4_scores_gpt4
+# python eval_gpt4_score.py --input-dir eval_result/qwen2_vl_full_sft_2ep --output-dir eval_result/qwen2_vl_full_sft_2ep/gpt4_scores_gpt4
+# python eval_gpt4_score.py --input-dir eval_result/qwen2_vl_lora_sft_15ep --output-dir eval_result/qwen2_vl_lora_sft_15ep/gpt4_scores_gpt4
+# python eval_gpt4_score.py --input-dir eval_result/qwen2-vl-5ep --output-dir eval_result/qwen2-vl-5ep/gpt4_scores_gpt4
+
+# python eval_gpt4_score.py --input-dir eval_result/deepseek_r1_distill_qwen2_vl_7b --output-dir eval_result/deepseek_r1_distill_qwen2_vl_7b/gpt4_scores_gpt4
