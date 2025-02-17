@@ -146,6 +146,11 @@ def analyze_scores(scores_dir, output_dir):
     summary = df.groupby('Task')['Score'].agg(['count', 'mean', 'std', 'min', 'max']).round(2)
     print(summary)
     
+    # 保存统计摘要到CSV文件
+    summary_file = os.path.join(output_dir, 'score_summary.csv')
+    summary.to_csv(summary_file)
+    print(f"\n统计摘要已保存到: {summary_file}")
+    
     print("\n=== Conversation Statistics ===")
     print("Conversations by average score:")
     print(conv_df[['Conversation_ID', 'Avg_Score', 'Turn_Count']].to_string())
@@ -155,6 +160,8 @@ def main():
     # output_dir = "eval_result/llava-1.5-7b-hf-sft-5ep/analysis"
     scores_dir = "eval_result/llava-1.5-13b-hf-sft-5ep/gpt4_scores"
     output_dir = "eval_result/llava-1.5-13b-hf-sft-5ep/analysis"
+    # scores_dir = "eval_result/GPT4Vresults/gpt4_scores"
+    # output_dir = "eval_result/GPT4Vresults/analysis"
     analyze_scores(scores_dir, output_dir)
 
 if __name__ == "__main__":
